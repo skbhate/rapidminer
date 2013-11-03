@@ -1,6 +1,6 @@
-<project name="RapidMiner" xmlns:ac="antlib:net.sf.antcontrib">
+<project name="CubeBoard" xmlns:ac="antlib:net.sf.antcontrib">
 	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpath="ant/ant-contrib-1.0b3.jar" />
-	<description>Build file for RapidMiner</description>
+	<description>Build file for CubeBoard</description>
 	<property file="build.properties" />
 	<property name="src" location="src" />
 	<property name="src_agpl" location="src_agpl" />
@@ -53,7 +53,7 @@
 
 	<!-- Location of changes files -->
 	<property name="changes.dir" location="changes" />
-	<property name="changes.current" value="${changes.dir}/CHANGES_${rapidminer.longversion}.txt" />
+	<property name="changes.current" value="${changes.dir}/CHANGES_${cubeboard.longversion}.txt" />
 
 	<property name="makensis" value="makensis" />
 	<!-- Assume this is on the PATH -->
@@ -125,7 +125,7 @@
 		<ant antfile="${manual}/build.xml" dir="${manual}" target="install" />
 	</target>
 
-	<target name="clean" unless="lock.isCleaned" description="Delete the build directory, java doc, rapidminer.jar">
+	<target name="clean" unless="lock.isCleaned" description="Delete the build directory, java doc, cubeboard.jar">
 		<echo message="Cleaning..." />
 		<delete dir="${build}" />
 		<delete dir="${test.build}" />
@@ -134,7 +134,7 @@
 		<mkdir dir="${javadoc}" />
 		<delete>
 			<fileset dir="./" defaultexcludes="no" includes="**/*~" />
-			<fileset dir="${lib}/" includes="rapidminer.jar" />
+			<fileset dir="${lib}/" includes="cubeboard.jar" />
 			<fileset dir="${lib}/" includes="launcher.jar" />
 		</delete>
 
@@ -157,8 +157,8 @@
 	</target>
 
 	<target name="build.common">
-		<echo message="RapidMiner: Compile with Java from dir: ${java.home}" />
-		<echo message="RapidMiner: using Java version: ${java.version}" />
+		<echo message="CubeBoard: Compile with Java from dir: ${java.home}" />
+		<echo message="CubeBoard: using Java version: ${java.version}" />
 		<javac debug="${compiler.debug}" destdir="${build}" deprecation="${compiler.deprecation}" compiler="${compiler.version}" nowarn="true" fork="true" memorymaximumsize="400m" includeantruntime="false" target="${compiler.target}" source="${compiler.source}">
 			<compilerarg value="${compiler.arguments}" />
 
@@ -184,22 +184,22 @@
 		</javac>
 	</target>
 
-	<target name="createJar" depends="build" description="Generate the lib/rapidminer.jar file">
+	<target name="createJar" depends="build" description="Generate the lib/cubeboard.jar file">
 		<echo message="Creating jar..." />
 		<pathconvert pathsep=" " property="manifest.classpath" refid="rm.classpath" dirsep="/">
 			<map from="${lib}/" to="" />
 		</pathconvert>
 		<echo message="Manifest Classpath: ${manifest.classpath}" />
-		<jar jarfile="${lib}/rapidminer.jar" update="false">
+		<jar jarfile="${lib}/cubeboard.jar" update="false">
 			<fileset dir="${build}" excludes="*.class,com/rapid_i/Launcher*.class" includes="**/*" />
 			<manifest>
-				<attribute name="Specification-Title" value="RapidMiner" />
-				<attribute name="Specification-Version" value="${rapidminer.longversion}" />
-				<attribute name="Implementation-Title" value="RapidMiner" />
-				<attribute name="Implementation-Version" value="${rapidminer.longversion}-${platform}" />
-				<attribute name="Implementation-Vendor" value="Rapid-I" />
-				<attribute name="Specification-Vendor" value="Rapid-I" />
-				<attribute name="Implementation-URL" value="http://www.rapidminer.com" />
+				<attribute name="Specification-Title" value="CubeBoard" />
+				<attribute name="Specification-Version" value="${cubeboard.longversion}" />
+				<attribute name="Implementation-Title" value="CubeBoard" />
+				<attribute name="Implementation-Version" value="${cubeboard.longversion}-${platform}" />
+				<attribute name="Implementation-Vendor" value="Cognizeus" />
+				<attribute name="Specification-Vendor" value="Cognizeus" />
+				<attribute name="Implementation-URL" value="http://www.cognizeus.com" />
 				<attribute name="Class-Path" value="launcher.jar ${manifest.classpath}" />
 				<attribute name="Main-Class" value="com.rapidminer.gui.RapidMinerGUI" />
 			</manifest>
@@ -207,14 +207,14 @@
 		<jar jarfile="${lib}/launcher.jar" update="true">
 			<fileset dir="${build}" excludes="*.class" includes="com/rapid_i/Launcher*.class" />
 			<manifest>
-				<attribute name="Specification-Title" value="RapidMinerLauncher" />
-				<attribute name="Specification-Version" value="${rapidminer.longversion}" />
-				<attribute name="Implementation-Title" value="RapidMinerLauncher" />
-				<attribute name="Implementation-Version" value="${rapidminer.longversion}-${platform}" />
-				<attribute name="Implementation-Vendor" value="Rapid-I" />
-				<attribute name="Specification-Vendor" value="Rapid-I" />
-				<attribute name="Implementation-URL" value="http://www.rapidminer.com" />
-				<attribute name="Class-Path" value="rapidminer.jar ${manifest.classpath}" />
+				<attribute name="Specification-Title" value="CubeBoardLauncher" />
+				<attribute name="Specification-Version" value="${cubeboard.longversion}" />
+				<attribute name="Implementation-Title" value="CubeBoardLauncher" />
+				<attribute name="Implementation-Version" value="${cubeboard.longversion}-${platform}" />
+				<attribute name="Implementation-Vendor" value="Cognizeus" />
+				<attribute name="Specification-Vendor" value="Cognizeus" />
+				<attribute name="Implementation-URL" value="http://www.cognizeus.com" />
+				<attribute name="Class-Path" value="cubeboard.jar ${manifest.classpath}" />
 				<attribute name="Main-Class" value="com.rapid_i.Launcher" />
 			</manifest>
 		</jar>
@@ -271,15 +271,15 @@
 
 	<target name='release.makeRPM' depends='release.prepare' description="This will create a RPM for linux distributions">
 		<echo message="Releasing RPM..." />
-		<!-- Now creating rapidminer.jar and copy from lib to release path -->
+		<!-- Now creating cubeboard.jar and copy from lib to release path -->
 		<antcall target="createJar">
 			<param name="platform" value="WIN32" />
 		</antcall>
-		<copy file="${lib}/rapidminer.jar" todir="${release.files}/lib" />
+		<copy file="${lib}/cubeboard.jar" todir="${release.files}/lib" />
 		<copy file="${lib}/launcher.jar" todir="${release.files}/lib" />
 
 		<taskdef resource="org/freecompany/redline/ant/antlib.xml" classpath="${ant.library.dir}/redline-1.1.3.jar" />
-		<rpm architecture='NOARCH' group='Applications' summary="RapidMiner ${rapidminer.shortversion} Community Edition" name='rapidminer' release="1" license="AGPL3" url="http://rapid-i.com" vendor="Rapid-I GmbH" packager="Marcin Skirzynski" version='${rapidminer.shortversion}' destination='${release}' description="RapidMiner is the world-wide leading open-source data mining solution due to the combination of its leading-edge technologies and its functional range. Applications of RapidMiner cover a wide range of real-world data mining tasks." xmlns="antlib:org.freecompany.redline.ant">
+		<rpm architecture='NOARCH' group='Applications' summary="CubeBoard ${cubeboard.shortversion} Community Edition" name='cubeboard' release="1" license="AGPL3" url="http://Cognizeus.com" vendor="Cognizeus GmbH" packager="Marcin Skirzynski" version='${cubeboard.shortversion}' destination='${release}' description="CubeBoard is the world-wide leading open-source data mining solution due to the combination of its leading-edge technologies and its functional range. Applications of CubeBoard cover a wide range of real-world data mining tasks." xmlns="antlib:org.freecompany.redline.ant">
 			<zipfileset prefix='/usr/share/rapidminer' dir="${release.files}">
 				<include name="**/*" />
 				<exclude name="scripts/*.bat" />
@@ -307,16 +307,16 @@
 
 	<target name="release.makePlatformIndependent" depends="release.prepare" description="This creates the platform independent zip file">
 		<echo message="Releasing Platform independent zip..." />
-		<!-- Now creating rapidminer.jar and copy from lib to release path -->
+		<!-- Now creating cubeboard.jar and copy from lib to release path -->
 		<antcall target="createJar">
 			<param name="platform" value="ANY" />
 		</antcall>
-		<copy file="${lib}/rapidminer.jar" todir="${release.files}/lib" />
+		<copy file="${lib}/cubeboard.jar" todir="${release.files}/lib" />
 		<copy file="${lib}/launcher.jar" todir="${release.files}/lib" />
 
 		<!-- Now zip everything together and put into release directory -->
-		<zip destfile="${release}/rapidminer-${rapidminer.longversion}.zip">
-			<zipfileset dir="${release.files}" prefix="rapidminer">
+		<zip destfile="${release}/cubeboard-${cubeboard.longversion}.zip">
+			<zipfileset dir="${release.files}" prefix="cubeboard">
 				<include name="**" />
 			</zipfileset>
 		</zip>
@@ -324,16 +324,16 @@
 		<!-- Now tidy up release/files if not needed anymore -->
 		<ant target="release.finish" />
 	</target>
-
+<!-- remove app bundler- skb -->
 	<!-- OS X App bundle (http://intransitione.com/blog/take-java-to-app-store/#stepone)-->
-	<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="ant/appbundler-1.0.jar" />
+	<!-- <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="ant/appbundler-1.0.jar" /> -->
 
 	<target name="release.makeOSXAppBundle" depends="version.get, createJar">
-		<bundleapp outputdirectory="${release}" name="RapidMiner" displayname="RapidMiner" identifier="com.rapid_i.RapidMiner" mainclassname="com.rapid_i.Launcher" shortversion="${rapidminer.shortversion}" copyright="${current.year} Rapid-I GmbH" icon="${resources}/com/rapidminer/resources/${bundle.osx.icon}">
+		<bundleapp outputdirectory="${release}" name="CubeBoard" displayname="CubeBoard" identifier="com.rapid_i.RapidMiner" mainclassname="com.rapid_i.Launcher" shortversion="${cubeboard.shortversion}" copyright="${current.year} Cognizeus GmbH" icon="${resources}/com/rapidminer/resources/${bundle.osx.icon}">
 
 			<!--The bundleapp task doesn't support classpathref so all 
 	             the run classpath entries must be stated here too. -->
-			<classpath file="${lib}/rapidminer.jar" />
+			<classpath file="${lib}/cubeboard.jar" />
 			<classpath file="${lib}/launcher.jar" />
 
 			<!--Workaround since the icon parameter for bundleapp 
@@ -343,8 +343,8 @@
 			<option value="-Xdock:icon=$APP_ROOT/Contents/Resources/${bundle.osx.icon}" />
 
 			<!-- OSX specific options, optional -->
-			<option value="-Xdock:name=RapidMiner" />
-			<option value="-Dcom.apple.mrj.application.apple.menu.about.name=RapidMiner" />
+			<option value="-Xdock:name=CubeBoard" />
+			<option value="-Dcom.apple.mrj.application.apple.menu.about.name=CubeBoard" />
 
 			<option value="-Xmx1024M" />
 
@@ -375,20 +375,20 @@
 
 	<target name="release.makeWin32" depends="release.prepare" description="This creates the installer for the Windows32 platform">
 		<echo message="Releasing Windows32 Installer..." />
-		<!-- Now creating rapidminer.jar and copy from lib to release path -->
+		<!-- Now creating cubeboard.jar and copy from lib to release path -->
 		<antcall target="createJar">
 			<param name="platform" value="WIN32" />
 		</antcall>
-		<copy file="${lib}/rapidminer.jar" todir="${release.files}/lib" />
+		<copy file="${lib}/cubeboard.jar" todir="${release.files}/lib" />
 		<copy file="${lib}/launcher.jar" todir="${release.files}/lib" />
 
-		<!-- Now build launcher: Will generate release/files/RapidMiner.exe -->
+		<!-- Now build launcher: Will generate release/files/cubeboard.exe -->
 		<echo message="Building launcher..." />
 		<exec executable="${makensis}">
 			<arg line="installation/launcher.nsi" />
 		</exec>
 
-		<!-- Now build Updater: Will generate release/files/scripts/RapidMinerUpdate.exe -->
+		<!-- Now build Updater: Will generate release/files/scripts/CubeBoardUpdate.exe -->
 		<echo message="Building Updatefunction..." />
 		<exec executable="${makensis}">
 			<arg line="installation/update.nsi" />
@@ -400,18 +400,18 @@
 			<fileset dir="${jre32}" />
 		</copy>
 
-		<!-- Now build installer: Will generate release/rapidminer-${SHORT_VERSION}x32-install.exe -->
+		<!-- Now build installer: Will generate release/cubeboard-${SHORT_VERSION}x32-install.exe -->
 		<echo message="Building installer..." />
 		<exec executable="${makensis}">
 			<arg line="installation/installer.nsi" />
 		</exec>
 		<!-- rename it to long version -->
 		<echo message="Renaming to long version..." />
-		<move tofile="${release}/rapidminer-${rapidminer.longversion}x32-install.exe" file="${release}/rapidminer-${rapidminer.shortversion}x32-install.exe" />
+		<move tofile="${release}/cubeboard-${cubeboard.longversion}x32-install.exe" file="${release}/cubeboard-${cubeboard.shortversion}x32-install.exe" />
 
-		<!-- delete OS-dependent files: RapidMiner.exe, JRE -->
+		<!-- delete OS-dependent files: CubeBoard.exe, JRE -->
 		<echo message="Deleting OS-dependent files..." />
-		<delete file="${release.files}/RapidMiner.exe" />
+		<delete file="${release.files}/CubeBoard.exe" />
 		<delete dir="${release.files}/jre" />
 
 		<!-- Now tidy up release/files if not needed anymore -->
@@ -421,19 +421,19 @@
 
 	<target name="release.makeWin64" depends="release.prepare" description="This creates the installer for the Windows64 platform">
 		<echo message="Releasing Windows64 Installer..." />
-		<!-- Now creating rapidminer.jar and copy from lib to release path -->
+		<!-- Now creating cubeboard.jar and copy from lib to release path -->
 		<antcall target="createJar">
 			<param name="platform" value="WIN64" />
 		</antcall>
-		<copy file="${lib}/rapidminer.jar" todir="${release.files}/lib" />
+		<copy file="${lib}/cubeboard.jar" todir="${release.files}/lib" />
 		<copy file="${lib}/launcher.jar" todir="${release.files}/lib" />
 
-		<!-- Now build launcher: Will generate release/files/RapidMiner.exe -->
+		<!-- Now build launcher: Will generate release/files/CubeBoard.exe -->
 		<exec executable="${makensis}">
 			<arg line="installation/launcher_x64.nsi" />
 		</exec>
 
-		<!-- Now build Updater: Will generate release/files/scripts/RapidMinerUpdate.exe -->
+		<!-- Now build Updater: Will generate release/files/scripts/CubeBoardUpdate.exe -->
 		<echo message="Building Updatefunction..." />
 		<exec executable="${makensis}">
 			<arg line="installation/update.nsi" />
@@ -444,16 +444,16 @@
 			<fileset dir="${jre64}" />
 		</copy>
 
-		<!-- Now build installer: Will generate release/rapidminer-${SHORT_VERSION}x64-install.exe -->
+		<!-- Now build installer: Will generate release/cubeboard-${SHORT_VERSION}x64-install.exe -->
 		<exec executable="${makensis}">
 			<arg line="installation/installer_x64.nsi" />
 		</exec>
 		<!-- rename it to long version -->
-		<move tofile="${release}/rapidminer-${rapidminer.longversion}x64-install.exe" file="${release}/rapidminer-${rapidminer.shortversion}x64-install.exe" />
+		<move tofile="${release}/cubeboard-${cubeboard.longversion}x64-install.exe" file="${release}/cubeboard-${cubeboard.shortversion}x64-install.exe" />
 
 
-		<!-- delete OS-dependent files: RapidMiner.exe, JRE -->
-		<delete file="${release.files}/RapidMiner.exe" />
+		<!-- delete OS-dependent files: CubeBoard.exe, JRE -->
+		<delete file="${release.files}/CubeBoard.exe" />
 		<delete dir="${release.files}/jre" />
 
 		<!-- Now tidy up release/files if not needed anymore -->
@@ -497,24 +497,24 @@
 
 		<!-- Same as platfrom independent zip file: Call it and rename result -->
 		<ant target="release.makePlatformIndependent" />
-		<copy file="${release}/rapidminer-${rapidminer.longversion}.zip" tofile="${release}/update_rapidminer-${rapidminer.longversion}.zip" />
+		<copy file="${release}/cubeboard-${cubeboard.longversion}.zip" tofile="${release}/update_cubeboard-${cubeboard.longversion}.zip" />
 	</target>
 
 	<target name="update.makeWin32" depends="release.prepare" description="This creates the installer for the Windows32 platform">
 		<echo message="Releasing Windows32 Update..." />
-		<!-- Now creating rapidminer.jar and copy from lib to release path -->
+		<!-- Now creating cubeboard.jar and copy from lib to release path -->
 		<antcall target="createJar">
 			<param name="platform" value="WIN32" />
 		</antcall>
-		<copy file="${lib}/rapidminer.jar" todir="${release.files}/lib" />
+		<copy file="${lib}/cubeboard.jar" todir="${release.files}/lib" />
 		<copy file="${lib}/launcher.jar" todir="${release.files}/lib" />
 
-		<!-- Now build launcher: Will generate release/files/RapidMiner.exe -->
+		<!-- Now build launcher: Will generate release/files/CubeBoard.exe -->
 		<exec executable="${makensis}">
 			<arg line="installation/launcher.nsi" />
 		</exec>
 		
-		<!-- Now build Updater: Will generate release/files/scripts/RapidMinerUpdate.exe -->
+		<!-- Now build Updater: Will generate release/files/scripts/CubeBoardUpdate.exe -->
 		<echo message="Building Updatefunction..." />
 		<exec executable="${makensis}">
 			<arg line="installation/update.nsi" />
@@ -526,14 +526,14 @@
 		</copy>
 
 		<!-- Now zip everything together and put into release directory -->
-		<zip destfile="${release}/update_rapidminer-${rapidminer.longversion}x32.zip">
-			<zipfileset dir="${release.files}" prefix="rapidminer">
+		<zip destfile="${release}/update_cubeboard-${cubeboard.longversion}x32.zip">
+			<zipfileset dir="${release.files}" prefix="cubeboard">
 				<include name="**" />
 			</zipfileset>
 		</zip>
 
-		<!-- delete OS-dependent files: RapidMiner.exe, JRE -->
-		<delete file="${release.files}/RapidMiner.exe" />
+		<!-- delete OS-dependent files: CubeBoard.exe, JRE -->
+		<delete file="${release.files}/CubeBoard.exe" />
 		<delete dir="${release.files}/jre" />
 
 		<!-- Now tidy up release/files if not needed anymore -->
@@ -542,19 +542,19 @@
 
 	<target name="update.makeWin64" depends="release.prepare" description="This creates the installer for the Windows64 platform">
 		<echo message="Releasing Windows64 Update..." />
-		<!-- Now creating rapidminer.jar and copy from lib to release path -->
+		<!-- Now creating cubeboard.jar and copy from lib to release path -->
 		<antcall target="createJar">
 			<param name="platform" value="WIN64" />
 		</antcall>
-		<copy file="${lib}/rapidminer.jar" todir="${release.files}/lib" />
+		<copy file="${lib}/cubeboard.jar" todir="${release.files}/lib" />
 		<copy file="${lib}/launcher.jar" todir="${release.files}/lib" />
 
-		<!-- Now build launcher: Will generate release/files/RapidMiner.exe -->
+		<!-- Now build launcher: Will generate release/files/CubeBoard.exe -->
 		<exec executable="${makensis}">
 			<arg line="installation/launcher_x64.nsi" />
 		</exec>
 		
-	<!-- Now build Updater: Will generate release/files/scripts/RapidMinerUpdate.exe -->
+		<!-- Now build Updater: Will generate release/files/scripts/CubeBoardUpdate.exe -->
 	<echo message="Building Updatefunction..." />
 	<exec executable="${makensis}">
 		<arg line="installation/update.nsi" />
@@ -566,14 +566,14 @@
 		</copy>
 
 		<!-- Now zip everything together and put into release directory -->
-		<zip destfile="${release}/update_rapidminer-${rapidminer.longversion}x64.zip">
-			<zipfileset dir="${release.files}" prefix="rapidminer">
+		<zip destfile="${release}/update_cubeboard-${cubeboard.longversion}x64.zip">
+			<zipfileset dir="${release.files}" prefix="cubeboard">
 				<include name="**" />
 			</zipfileset>
 		</zip>
 
-		<!-- delete OS-dependent files: RapidMiner.exe, JRE -->
-		<delete file="${release.files}/RapidMiner.exe" />
+		<!-- delete OS-dependent files: CubeBoard.exe, JRE -->
+		<delete file="${release.files}/CubeBoard.exe" />
 		<delete dir="${release.files}/jre" />
 
 		<!-- Now tidy up release/files if not needed anymore -->
@@ -614,22 +614,22 @@
 		</condition>
 	</target>
 
-	<target name="test.createJar" depends="createJar,test.build" description="Generate the lib/rapidminer.jar file">
+	<target name="test.createJar" depends="createJar,test.build" description="Generate the lib/cubeboard.jar file">
 		<echo message="Creating jar..." />
 		<!--<pathconvert pathsep=" " property="manifest.classpath" refid="rm.classpath" 
 			dirsep="/"> <map from="${lib}/" to="" /> </pathconvert> <echo message="Manifest 
 			Classpath: ${manifest.classpath}" /> -->
-		<jar jarfile="${lib}/rapidminer_test.jar" update="false">
+		<jar jarfile="${lib}/cubeboard_test.jar" update="false">
 			<fileset dir="${test.build}" includes="**/*" />
 			<manifest>
-				<attribute name="Specification-Title" value="RapidMiner Tests" />
-				<attribute name="Specification-Version" value="${rapidminer.longversion}" />
-				<attribute name="Implementation-Title" value="RapidMiner Tests" />
-				<attribute name="Implementation-Version" value="${rapidminer.longversion}-${platform}" />
-				<attribute name="Implementation-Vendor" value="Rapid-I" />
-				<attribute name="Specification-Vendor" value="Rapid-I" />
-				<attribute name="Implementation-URL" value="http://www.rapidminer.com" />
-				<attribute name="Class-Path" value="rapidminer.jar ${manifest.classpath}" />
+				<attribute name="Specification-Title" value="CubeBoard Tests" />
+				<attribute name="Specification-Version" value="${cubeboard.longversion}" />
+				<attribute name="Implementation-Title" value="CubeBoard Tests" />
+				<attribute name="Implementation-Version" value="${cubeboard.longversion}-${platform}" />
+				<attribute name="Implementation-Vendor" value="Cognizeus" />
+				<attribute name="Specification-Vendor" value="Cognizeus" />
+				<attribute name="Implementation-URL" value="http://www.cognizeus.com" />
+				<attribute name="Class-Path" value="cubeboard.jar ${manifest.classpath}" />
 			</manifest>
 		</jar>
 	</target>
@@ -643,9 +643,9 @@
 	<!-- Version handling -->
 
 	<target name="version.get">
-		<property name="rapidminer.shortversion" value="${rapidminer.version}.${rapidminer.revision}" />
-		<property name="rapidminer.longversion" value="${rapidminer.version}.${rapidminer.revision}.${rapidminer.update}" />
-		<echo message="Long version: ${rapidminer.longversion}; short version: ${rapidminer.shortversion}" />
+		<property name="cubeboard.shortversion" value="${cubeboard.version}.${cubeboard.revision}" />
+		<property name="cubeboard.longversion" value="${cubeboard.version}.${cubeboard.revision}.${cubeboard.update}" />
+		<echo message="Long version: ${cubeboard.longversion}; short version: ${cubeboard.shortversion}" />
 
 		<!-- ant target="version.updateFiles" / -->
 	</target>
@@ -654,36 +654,36 @@
 		<echo message="Increasing Update Number..." />
 
 		<propertyfile file="build.properties">
-			<entry type="int" key="rapidminer.update" operation="+" value="1" pattern="000" />
+			<entry type="int" key="cubeboard.update" operation="+" value="1" pattern="000" />
 		</propertyfile>
 
-		<property name="rapidminer.shortversion" value="${rapidminer.version}.${rapidminer.revision}" />
-		<property name="rapidminer.longversion" value="${rapidminer.version}.${rapidminer.revision}.${rapidminer.update}" />
+		<property name="cubeboard.shortversion" value="${cubeboard.version}.${cubeboard.revision}" />
+		<property name="cubeboard.longversion" value="${cubeboard.version}.${cubeboard.revision}.${cubeboard.update}" />
 
 		<ant target="version.updateFiles" />
 	</target>
 
 	<target name="version.updateFiles">
-		<property name="rapidminer.shortversion" value="${rapidminer.version}.${rapidminer.revision}" />
-		<property name="rapidminer.longversion" value="${rapidminer.version}.${rapidminer.revision}.${rapidminer.update}" />
+		<property name="cubeboard.shortversion" value="${cubeboard.version}.${cubeboard.revision}" />
+		<property name="cubeboard.longversion" value="${cubeboard.version}.${cubeboard.revision}.${cubeboard.update}" />
 
 		<!-- Installer version -->
 		<mkdir dir="installation" />
 		<echo file="installation/version.nsi">
-			!define SHORT_VERSION ${rapidminer.shortversion}
-			!define LONG_VERSION ${rapidminer.longversion}.0
+			!define SHORT_VERSION ${cubeboard.shortversion}
+			!define LONG_VERSION ${cubeboard.longversion}.0
 		</echo>
 
 		<!-- Version.java -->
-		<replaceregexp file="${src}/com/rapidminer/RapidMinerVersion.java" match="VERSION_STRING = &quot;(.*)&quot;;" replace="VERSION_STRING = &quot;${rapidminer.longversion}&quot;;" />
-		<echo message="Updating to version ${rapidminer.longversion}" />
+		<replaceregexp file="${src}/com/rapidminer/RapidMinerVersion.java" match="VERSION_STRING = &quot;(.*)&quot;;" replace="VERSION_STRING = &quot;${cubeboard.longversion}&quot;;" />
+		<echo message="Updating to version ${cubeboard.longversion}" />
 		<!-- <delete file="${src}/com/rapidminer/RapidMinerVersion.java" /> <copy 
 			file="${license}" tofile="${src}/com/rapidminer/RapidMinerVersion.java" /> 
 			<echo file="${src}/com/rapidminer/RapidMinerVersion.java" append="true">package 
 			com.rapidminer; import com.rapidminer.gui.tools.VersionNumber; /** This class 
 			is generated by the ant target &quot;version.updateFiles&quot; to ensure 
 			the correct version number in RapidMiner. */ public class RapidMinerVersion 
-			extends VersionNumber { public RapidMinerVersion() {super("${rapidminer.longversion}");} 
+			extends VersionNumber { public RapidMinerVersion() {super("${cubeboard.longversion}");} 
 			}</echo> -->
 	</target>
 
@@ -691,7 +691,7 @@
 	<!-- StyleChecks -->
 
 	<target name="check.countTotalLines" depends="build" description="Prints the total amount of written lines.">
-		<echo message="Count lines of RapidMiner core..." />
+		<echo message="Count lines of CubeBoard core..." />
 		<java classname="StyleCheck" classpath="${build}">
 			<arg value="total_lines" />
 			<arg value="${src}" />
@@ -768,7 +768,7 @@
 		</java>
 	</target>
 
-	<!-- Update .properties files from Rapid-I Pootle. You can change the language 
+	<!-- Update .properties files from Cognizeus Pootle. You can change the language 
 		variables in the property name "language" attribute. -->
 	<target name="update.properties" depends="init" description="Updating .properties files">
 		<echo message="Getting the following .properties files for languages: ${language}." />
@@ -802,8 +802,8 @@
 
 	<target name="javaDoc.makeZip" depends="javaDoc.generate" description="This generates new java doc from source files a zips them for relase into the release dir.">
 		<echo message="Releasing java doc..." />
-		<zip destfile="${release}/rapidminer-${rapidminer.longversion}-javadoc.zip">
-			<zipfileset dir="./javadoc" prefix="rapidminer-${rapidminer.shortversion}/javadoc/">
+		<zip destfile="${release}/cubeboard-${cubeboard.longversion}-javadoc.zip">
+			<zipfileset dir="./javadoc" prefix="cubeboard-${cubeboard.shortversion}/javadoc/">
 				<include name="**/*" />
 			</zipfileset>
 		</zip>
@@ -811,17 +811,17 @@
 
 	<target name="javaDoc.generate" depends="init, clean, build" description="Generate the java class documentation">
 		<echo message="Generating java doc..." />
-		<javadoc sourcepath="${src}" packagenames="com.*" destdir="${javadoc}" maxmemory="900m" author="true" version="true" windowtitle="RapidMiner Class Documentation" use="true">
+		<javadoc sourcepath="${src}" packagenames="com.*" destdir="${javadoc}" maxmemory="900m" author="true" version="true" windowtitle="CubeBoard Class Documentation" use="true">
 			<!-- breakiterator="true" -->
 			<classpath refid="javadoc.classpath" />
 			<doctitle>
-				<![CDATA[<h1>RapidMiner ${rapidminer.shortversion} Class Documentation</h1>]]></doctitle>
+				<![CDATA[<h1>CubeBoard ${cubeboard.shortversion} Class Documentation</h1>]]></doctitle>
 		<footer>
 			<![CDATA[<a href="http://sourceforge.net/projects/yale" target="_blank">
 			<img src="http://sflogo.sourceforge.net/sflogo.php?group_id=114160&type=16" width="150" height="40" />
 		</a>]]></footer>
 	<bottom>
-		<![CDATA[<i>Copyright &#169; 2001-2012 by <a href="http://rapid-i.com" target="_blank">Rapid-I</a>
+		<![CDATA[<i>Copyright &#169; 2001-2012 by <a href="http://Cognizeus.com" target="_blank">Cognizeus</a>
 	</i>]]></bottom>
 <!-- Links are not supported here -->
 <tag name="rapidminer.todo" description="To do:" />
@@ -870,13 +870,13 @@
 </copy>
 
 <copy file="${rpm.installation.dir}/${rpm.spec.file}" todir="${rpm.specs.dir}" />
-<replace file="${rpm.specs.dir}/${rpm.spec.file}" token="%{_version-from-ant}" value="${rapidminer.version}.${rapidminer.revision}" />
+<replace file="${rpm.specs.dir}/${rpm.spec.file}" token="%{_version-from-ant}" value="${cubeboard.version}.${cubeboard.revision}" />
 
 
-<tar destfile="${rpm.sources.dir}/${rpm.rapidminer.tar}" basedir="${rpm.sources.dir}" />
-<gzip destfile="${rpm.sources.dir}/${rpm.rapidminer.tar.gz}" src="${rpm.sources.dir}/${rpm.rapidminer.tar}" />
+<tar destfile="${rpm.sources.dir}/${rpm.cubeboard.tar}" basedir="${rpm.sources.dir}" />
+<gzip destfile="${rpm.sources.dir}/${rpm.cubeboard.tar.gz}" src="${rpm.sources.dir}/${rpm.cubeboard.tar}" />
 
-<delete file="${rpm.sources.dir}/${rpm.rapidminer.tar}" />
+<delete file="${rpm.sources.dir}/${rpm.cubeboard.tar}" />
 
 
 </target>

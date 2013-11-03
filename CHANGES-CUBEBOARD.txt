@@ -1,0 +1,11 @@
+
+REQUIRED CHANGES.
+RAPIDMINER -> CUBEBOARD 1.0.001
+1. $rapidminer/ build.properties: 	a. change 'rapidminer.version' to 'cubeboard.version'
+			b. change  'rapidminer.revisionto 'cubeboard.revision'
+			c. change 'rapidminer.update' to 'cubeboard.update'
+			 d. version set to 1.0.001
+2. $rapidminer/resources/com/
+3. $rapidminer/build.xml : It's a core ant build file for cubeboard. Be very careful what you change here. 'Replace All' should be used with caution.
+
+
